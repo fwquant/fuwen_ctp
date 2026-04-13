@@ -1,4 +1,4 @@
-from fw_vnpy_ctp.api import MdApi, TdApi
+from fw_ctp.api import MdApi, TdApi
 
 # 测试创建 API 实例
 md_api = MdApi()

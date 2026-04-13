@@ -47,10 +47,10 @@ def clean_build_files():
 
     dirs_to_clean = [
         'build',
-        'fw_vnpy_ctp.egg-info',
-        'fw_vnpy_ctp/api/__pycache__',
-        'fw_vnpy_ctp/__pycache__',
-        'fw_vnpy_ctp/gateway/__pycache__',
+        'fw_ctp.egg-info',
+        'fw_ctp/api/__pycache__',
+        'fw_ctp/__pycache__',
+        'fw_ctp/gateway/__pycache__',
     ]
 
     for dir_name in dirs_to_clean:
@@ -59,7 +59,7 @@ def clean_build_files():
             print_info(f"删除目录: {dir_name}")
 
     # 删除所有扩展文件
-    extension_files = glob.glob("fw_vnpy_ctp/api/*.pyd") + glob.glob("fw_vnpy_ctp/api/*.so")
+    extension_files = glob.glob("fw_ctp/api/*.pyd") + glob.glob("fw_ctp/api/*.so")
     for f in extension_files:
         os.remove(f)
         print_info(f"删除文件: {os.path.basename(f)}")
@@ -172,7 +172,7 @@ def copy_pyd_files():
         for item in os.listdir('build'):
             # 支持 Windows 和 macOS/Linux 的编译输出目录
             if item.startswith('lib.'):
-                build_dirs.append(os.path.join('build', item, 'fw_vnpy_ctp', 'api'))
+                build_dirs.append(os.path.join('build', item, 'fw_ctp', 'api'))
 
     if not build_dirs:
         print_error("未找到编译输出文件")
@@ -185,7 +185,7 @@ def copy_pyd_files():
                 # 支持 .pyd (Windows) 和 .so (macOS/Linux) 文件
                 if file.endswith('.pyd') or file.endswith('.so'):
                     src = os.path.join(src_dir, file)
-                    dst = os.path.join('fw_vnpy_ctp/api', file)
+                    dst = os.path.join('fw_ctp/api', file)
                     shutil.copy2(src, dst)
                     print_info(f"复制: {file}")
                     copied = True
@@ -202,9 +202,9 @@ def get_ctp_version():
     """从头文件中获取 CTP API 版本"""
     # 尝试不同路径的头文件
     version_files = [
-        "fw_vnpy_ctp/api/include/ctp/ThostFtdcUserApiStruct.h",
-        "fw_vnpy_ctp/api/include/mac/ctp/ThostFtdcUserApiStruct.h",
-        "fw_vnpy_ctp/api/include/ThostFtdcUserApiStruct.h"
+        "fw_ctp/api/include/ctp/ThostFtdcUserApiStruct.h",
+        "fw_ctp/api/include/mac/ctp/ThostFtdcUserApiStruct.h",
+        "fw_ctp/api/include/ThostFtdcUserApiStruct.h"
     ]
     
     for version_file in version_files:
@@ -248,15 +248,15 @@ def verify_import():
     sys.path.insert(0, current_dir)
 
     # 移除可能干扰的模块
-    modules_to_remove = ['_fw_vnpy_ctp_editable_loader', 'fw_vnpy_ctp', 'fw_vnpy_ctp.api']
+    modules_to_remove = ['_fw_vnpy_ctp_editable_loader', 'fw_ctp', 'fw_ctp.api']
     for module in modules_to_remove:
         if module in sys.modules:
             del sys.modules[module]
 
     try:
         # 注意：是 TdApi 不是 TradeApi
-        from fw_vnpy_ctp.api import MdApi, TdApi
-        import fw_vnpy_ctp
+        from fw_ctp.api import MdApi, TdApi
+        import fw_ctp
 
         print_success("✅ MdApi 导入成功")
         print_success("✅ TdApi 导入成功")
@@ -268,7 +268,7 @@ def verify_import():
 
         # 1. 包版本
         try:
-            version = fw_vnpy_ctp.__version__
+            version = fw_ctp.__version__
             print(f"  📌 包版本: {version}")
         except AttributeError:
             # 尝试从 setup_config.py 读取
@@ -306,7 +306,7 @@ def verify_import():
 
         # 5. 查找扩展文件详情
         import glob
-        pyd_files = glob.glob("fw_vnpy_ctp/api/*.pyd") + glob.glob("fw_vnpy_ctp/api/*.so")
+        pyd_files = glob.glob("fw_ctp/api/*.pyd") + glob.glob("fw_ctp/api/*.so")
         if pyd_files:
             print(f"\n  🔧 扩展文件:")
             for f in sorted(pyd_files):
@@ -358,14 +358,14 @@ def verify_import():
 
         # 检查文件是否存在（注意不要重复导入 glob）
         import glob
-        extension_files = glob.glob("fw_vnpy_ctp/api/*.pyd") + glob.glob("fw_vnpy_ctp/api/*.so")
+        extension_files = glob.glob("fw_ctp/api/*.pyd") + glob.glob("fw_ctp/api/*.so")
         if extension_files:
             print(f"\n📁 找到扩展文件: {[os.path.basename(f) for f in extension_files]}")
         else:
             print("\n⚠️ 未找到扩展文件，编译可能未完成")
 
         # 检查 __init__.py 内容
-        init_file = "fw_vnpy_ctp/api/__init__.py"
+        init_file = "fw_ctp/api/__init__.py"
         if os.path.exists(init_file):
             print(f"\n📄 检查 {init_file}:")
             with open(init_file, 'r', encoding='utf-8') as f:
@@ -457,7 +457,7 @@ def do_full_build():
     if success:
         print_success("CTP 模块已就绪！")
         print("\n现在可以:")
-        print("  python -c \"from fw_vnpy_ctp.api import MdApi, TdApi\"")
+        print("  python -c \"from fw_ctp.api import MdApi, TdApi\"")
     else:
         print_error("构建失败，请检查错误信息")
         print("\n常见问题:")

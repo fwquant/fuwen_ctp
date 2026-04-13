@@ -2,7 +2,7 @@ from vnpy.event import EventEngine
 from vnpy.trader.engine import MainEngine
 from vnpy.trader.ui import MainWindow, create_qapp
 
-from fw_vnpy_ctp import CtpGateway as fw_CtpGateway
+from fw_ctp import CtpGateway as fw_CtpGateway
 
 
 # from vnpy_ctp import CtpGateway
