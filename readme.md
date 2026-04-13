@@ -1,3 +1,7 @@
+# 说明
+一个专业量化 福纹CTP 交易接口（网关）
+
+
 第N次更新步骤（如果是第一次，请看最后面的《第一次步骤》，当前为后面用得较多次数准备的。）：
 1、下载文件，下载需要更新的 SIMNOW api 文件包 https://www.simnow.com.cn/static/apiDownload.action
 2、准备    解压后的文件  (MACOS直接替换即可，下面不用管：thostmduserapi_se.framework和thosttraderapi_se.framework)
