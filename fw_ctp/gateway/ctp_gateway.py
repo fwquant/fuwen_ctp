@@ -63,7 +63,6 @@ from ..api import (
     THOST_FTDC_OSS_InsertRejected
 )
 
-
 # 委托状态映射
 STATUS_CTP2VT: dict[str, Status] = {
     THOST_FTDC_OST_NoTradeQueueing: Status.NOTTRADED,
@@ -125,8 +124,8 @@ OPTIONTYPE_CTP2VT: dict[str, OptionType] = {
 }
 
 # 其他常量
-MAX_FLOAT = sys.float_info.max                  # 浮点数极限值
-CHINA_TZ = ZoneInfo("Asia/Shanghai")       # 中国时区
+MAX_FLOAT = sys.float_info.max  # 浮点数极限值
+CHINA_TZ = ZoneInfo("Asia/Shanghai")  # 中国时区
 
 # 合约数据全局缓存字典
 symbol_contract_map: dict[str, ContractData] = {}
@@ -175,16 +174,16 @@ class CtpGateway(BaseGateway):
         production_mode: bool = envrionment == "实盘"
 
         if (
-            (not td_address.startswith("tcp://"))
-            and (not td_address.startswith("ssl://"))
-            and (not td_address.startswith("socks"))
+                (not td_address.startswith("tcp://"))
+                and (not td_address.startswith("ssl://"))
+                and (not td_address.startswith("socks"))
         ):
             td_address = "tcp://" + td_address
 
         if (
-            (not md_address.startswith("tcp://"))
-            and (not md_address.startswith("ssl://"))
-            and (not md_address.startswith("socks"))
+                (not md_address.startswith("tcp://"))
+                and (not md_address.startswith("ssl://"))
+                and (not md_address.startswith("socks"))
         ):
             md_address = "tcp://" + md_address
 
@@ -367,12 +366,12 @@ class CtpMdApi(MdApi):
         self.gateway.on_tick(tick)
 
     def connect(
-        self,
-        address: str,
-        userid: str,
-        password: str,
-        brokerid: str,
-        production_mode: bool
+            self,
+            address: str,
+            userid: str,
+            password: str,
+            brokerid: str,
+            production_mode: bool
     ) -> None:
         """连接服务器"""
         self.userid = userid
@@ -677,8 +676,8 @@ class CtpTdApi(TdApi):
 
         # 因为报单提交被拒绝导致的撤单状态，需要调整映射为拒单状态
         if (
-            data["OrderStatus"] == THOST_FTDC_OST_Canceled
-            and data["OrderSubmitStatus"] == THOST_FTDC_OSS_InsertRejected
+                data["OrderStatus"] == THOST_FTDC_OST_Canceled
+                and data["OrderSubmitStatus"] == THOST_FTDC_OSS_InsertRejected
         ):
             status = Status.REJECTED
 
@@ -713,8 +712,8 @@ class CtpTdApi(TdApi):
         # 特殊情况撤单（非交易时段、资金不足等）的日志输出
         status_msg: str = data["StatusMsg"]
         if (
-            data["OrderStatus"] == THOST_FTDC_OST_Canceled
-            and status_msg != "已撤单"       # 正常撤单
+                data["OrderStatus"] == THOST_FTDC_OST_Canceled
+                and status_msg != "已撤单"  # 正常撤单
         ):
             self.gateway.write_log(f"委托 {orderid} 状态更新，{status_msg}")
 
@@ -748,14 +747,14 @@ class CtpTdApi(TdApi):
         self.gateway.on_trade(trade)
 
     def connect(
-        self,
-        address: str,
-        userid: str,
-        password: str,
-        brokerid: str,
-        auth_code: str,
-        appid: str,
-        production_mode: bool
+            self,
+            address: str,
+            userid: str,
+            password: str,
+            brokerid: str,
+            auth_code: str,
+            appid: str,
+            production_mode: bool
     ) -> None:
         """连接服务器"""
         self.userid = userid
